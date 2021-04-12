@@ -147,7 +147,11 @@ if (USE_SIMD AND USE_TYPE_DOUBLE)
       set_property(SOURCE pffft_double.c PROPERTY COMPILE_FLAGS "/arch:AVX")
     endif()
   else()
-    set_property(SOURCE pffft_double.c PROPERTY COMPILE_FLAGS "-march=native")
+    if(DISABLE_SIMD_AVX)
+      set_property(SOURCE pffft_double.c PROPERTY COMPILE_FLAGS "-msse2")
+    else()
+      set_property(SOURCE pffft_double.c PROPERTY COMPILE_FLAGS "-mavx")
+    endif()
   endif()
   if(DISABLE_SIMD_AVX)
     target_compile_definitions(PFFFT PRIVATE PFFFT_AVX_DISABLE=1)
@@ -367,4 +371,5 @@ if (USE_TYPE_FLOAT)
   )
 
 endif()
+
 
